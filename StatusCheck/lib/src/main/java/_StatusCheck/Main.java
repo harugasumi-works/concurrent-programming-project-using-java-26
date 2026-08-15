@@ -9,25 +9,47 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.StructuredTaskScope;
 
-public class Main {
+public class Main  {
+	
+	private static final CustomJoin joiner = new CustomJoin();
 	
 	private static final HttpClient client = HttpClient.newBuilder()
 			.version(Version.HTTP_3)
             .connectTimeout(Duration.ofSeconds(10))
             .build(); 
 
+	@SuppressWarnings("preview")
 	public static void main(String[] args) {
 
 		List<ScanRequest> request = List.of(
-				new ScanRequest("www.facebook.com/"));
+				new ScanRequest("www.facebook.com"),
+				new ScanRequest("www.google.com"),
+				new ScanRequest("www.youtube.com"));
 		
-					
-		List<ScanResult> results = request.stream()
-		    .map(req -> new ScanResult(req, executeScan(req)))
-		    .toList();
 		
-		IO.println(results);
+		List<Callable<ScanResult>> tasks = request.stream()
+				.<Callable<ScanResult>>map(req -> () -> new ScanResult(req, executeScan(req)))
+				.toList();
+		
+		try (var scope = StructuredTaskScope.open(joiner)) {
+			
+			tasks.stream().forEach(scope::fork)
+                    ;
+			try {
+				ExecutionResult results = scope.join();
+				IO.println(results.successes());
+				IO.println(results.failures());
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+
+
+		}
+		
 	}
 	
 	
@@ -45,7 +67,8 @@ public class Main {
 			Instant start = Instant.now();
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			Instant end = Instant.now();
-			return new Success(response.statusCode(), Duration.between(start, end).toMillis());
+			var code = response.statusCode();
+			return (code != 200) ? new Fail("Failed to make a request. Status code:" + code) : new Success(code, Duration.between(start, end).toMillis());
 		} catch (IOException | InterruptedException e) {
 			return new Fail("The connection was disrupted: " + e.getMessage());
 		}
