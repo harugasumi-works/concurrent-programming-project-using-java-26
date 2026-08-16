@@ -36,16 +36,14 @@ public class Main  {
 		
 		try (var scope = StructuredTaskScope.open(joiner)) {
 			
-			tasks.stream().forEach(scope::fork)
-                    ;
+			tasks.stream().forEach(scope::fork) ;
 			try {
 				ExecutionResult results = scope.join();
-				IO.println(results.successes());
-				IO.println(results.failures());
+				Stats stat = Stats.summarize(results);
+				IO.println(stat);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-
 
 
 		}
@@ -67,7 +65,7 @@ public class Main  {
 			Instant start = Instant.now();
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			Instant end = Instant.now();
-			var code = response.statusCode();
+			int code = response.statusCode();
 			return (code != 200) ? new Fail("Failed to make a request. Status code:" + code) : new Success(code, Duration.between(start, end).toMillis());
 		} catch (IOException | InterruptedException e) {
 			return new Fail("The connection was disrupted: " + e.getMessage());

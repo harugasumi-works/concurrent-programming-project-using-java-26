@@ -8,6 +8,7 @@
 plugins {
     // Apply the java-library plugin for API and implementation separation.
     `java-library`
+    application
 }
 
 repositories {
@@ -28,6 +29,10 @@ dependencies {
     implementation(libs.guava)
 }
 
+application {
+    mainClass.set("_StatusCheck.Main")
+}
+
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
@@ -35,9 +40,16 @@ java {
     }
 }
 
+tasks.withType<JavaCompile> {
+    options.compilerArgs.add("--enable-preview")
+}
+
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+    jvmArgs("--enable-preview")
 }
 
-
+tasks.named<JavaExec>("run") {
+    jvmArgs("--enable-preview")
+}
