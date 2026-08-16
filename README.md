@@ -18,7 +18,7 @@ Actively under development, built incrementally phase by phase:
 - [x] Phase 1 — Core data types (`ScanRequest`, `Outcome`, `ScanResult`)
 - [x] Phase 2 — Execute stage (HTTPS request per URL)
 - [x] Phase 3 — Concurrent execution via `StructuredTaskScope` + custom `Joiner`
-- [ ] Phase 4 — Aggregate stage (stats over `ExecutionResult`)
+- [x] Phase 4 — Aggregate stage (stats over `ExecutionResult`)
 - [ ] Phase 5 — Sinks (log file, CSV export, console/UI output)
 - [ ] Phase 6 — Input sources (manual list, JSON file, UI)
 
