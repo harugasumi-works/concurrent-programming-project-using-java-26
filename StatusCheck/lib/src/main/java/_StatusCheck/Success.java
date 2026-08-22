@@ -1,5 +1,7 @@
 package _StatusCheck;
 
-public record Success(int statusCode, long latency) implements Outcome{
+import java.time.Instant;
+
+public record Success(Instant timeStamp, int statusCode, long latency) implements Outcome{
 
 }

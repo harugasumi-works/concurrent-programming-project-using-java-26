@@ -12,7 +12,10 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.StructuredTaskScope;
 
-public class Main  {
+import javafx.application.Application;
+import javafx.stage.Stage;
+
+public class Main extends Application {
 	
 	private static final CustomJoin joiner = new CustomJoin();
 	
@@ -20,6 +23,13 @@ public class Main  {
 			.version(Version.HTTP_3)
             .connectTimeout(Duration.ofSeconds(10))
             .build(); 
+	
+	private static String json = "";
+	
+	@Override
+    public void start(Stage primaryStage) {
+        JSON_DTO.exportJSON(primaryStage, json);
+    }
 
 	@SuppressWarnings("preview")
 	public static void main(String[] args) {
@@ -39,8 +49,8 @@ public class Main  {
 			tasks.stream().forEach(scope::fork) ;
 			try {
 				ExecutionResult results = scope.join();
-				Stats stat = Stats.summarize(results);
-				IO.println(stat);
+				Report stat = Report.summarize(results);
+				json = JSON_DTO.convert(stat);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -48,12 +58,14 @@ public class Main  {
 
 		}
 		
+	Application.launch(args);
+		
 	}
 	
 	
 	private static Outcome executeScan(ScanRequest req) {
         HttpRequest request = HttpRequest.newBuilder()
-        		 .uri(URI.create("https://" + req.URL()))
+        		 .uri(URI.create("https://" + req.requestedURL()))
         	        .timeout(Duration.ofSeconds(5))
         	        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36")
         	        .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8")
@@ -66,9 +78,9 @@ public class Main  {
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			Instant end = Instant.now();
 			int code = response.statusCode();
-			return (code != 200) ? new Fail("Failed to make a request. Status code:" + code) : new Success(code, Duration.between(start, end).toMillis());
+			return (code != 200) ? new Fail(start, code,"Failed to make a request.") : new Success(start, code, Duration.between(start, end).toMillis());
 		} catch (IOException | InterruptedException e) {
-			return new Fail("The connection was disrupted: " + e.getMessage());
+			return new Fail(Instant.now(), 0,"The connection was disrupted: " + e.getMessage());
 		}
         
 	}

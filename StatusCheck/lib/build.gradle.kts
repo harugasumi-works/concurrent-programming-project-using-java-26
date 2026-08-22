@@ -9,6 +9,7 @@ plugins {
     // Apply the java-library plugin for API and implementation separation.
     `java-library`
     application
+    id("org.openjfx.javafxplugin") version "0.1.0"
 }
 
 repositories {
@@ -27,6 +28,8 @@ dependencies {
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation(libs.guava)
+    
+    implementation("tools.jackson.core:jackson-databind:3.2.2")
 }
 
 application {
@@ -52,4 +55,9 @@ tasks.named<Test>("test") {
 
 tasks.named<JavaExec>("run") {
     jvmArgs("--enable-preview")
+}
+
+javafx {
+	version = "26"
+    modules("javafx.graphics", "javafx.controls", "javafx.fxml")
 }
