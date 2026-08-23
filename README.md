@@ -19,7 +19,7 @@ Actively under development, built incrementally phase by phase:
 - [x] Phase 2 — Execute stage (HTTPS request per URL)
 - [x] Phase 3 — Concurrent execution via `StructuredTaskScope` + custom `Joiner`
 - [x] Phase 4 — Aggregate stage (stats over `ExecutionResult`)
-- [ ] Phase 5 — Sinks (log file, CSV export, console/UI output)
+- [x] Phase 5 — Sinks (JSON, CSV export, UI output)
 - [ ] Phase 6 — Input sources (manual list, JSON file, UI)
 
 ## Running
