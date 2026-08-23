@@ -30,6 +30,7 @@ dependencies {
     implementation(libs.guava)
     
     implementation("tools.jackson.core:jackson-databind:3.2.2")
+    implementation("tools.jackson.dataformat:jackson-dataformat-csv:3.2.2")
 }
 
 application {
