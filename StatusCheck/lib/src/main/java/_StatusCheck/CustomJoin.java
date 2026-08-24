@@ -17,8 +17,6 @@ public class CustomJoin implements StructuredTaskScope.Joiner<ScanResult, Execut
         if (result instanceof ScanResult(_, Success(_, _, _))) {
             successes.add(subtask.get());
         } else failures.add(subtask.get());
-     
-        // Return false to instruct the scope NOT to cancel / short-circuit
         return false;
     }
 	

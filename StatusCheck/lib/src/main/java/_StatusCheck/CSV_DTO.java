@@ -21,7 +21,7 @@ public class CSV_DTO {
 		}
 	}
 	
-	public static String convert(ExecutionResult report) {
+	public static CSV convert(ExecutionResult report) {
 		CsvSchema schema = CsvSchema.builder()
 				.addColumn("timeStamp")
 		        .addColumn("url")
@@ -37,8 +37,8 @@ public class CSV_DTO {
 		        .toList();
 		
 		CsvMapper csvMapper = new CsvMapper();
-		String csv = csvMapper.writer(schema).writeValueAsString(rows);
-		return csv;
+		return new CSV(csvMapper.writer(schema).writeValueAsString(rows));
+		
 	}
 	
 

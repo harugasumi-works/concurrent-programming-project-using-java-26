@@ -3,36 +3,40 @@ package _StatusCheck;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.function.Supplier;
 
-import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 
 public class ExportFile {
 	
-	public static void export(Stage stage, String data) {
-        FileChooser window = new FileChooser();
-        window.getExtensionFilters().add(new ExtensionFilter("extension for standard JSON", "*.json"));
-        window.getExtensionFilters().add(new ExtensionFilter("extension for standard CSV", "*.csv"));
-        window.setTitle("Export File");
-       
+	public static void exportJSON(JSON body) {
+        export(new ExtensionFilter("JSON Files (*.json)", "*.json"), body::data);
+    }
 
-        File targetFile = window.showSaveDialog(stage);
+    public static void exportCSV(CSV body) {
+        export(new ExtensionFilter("CSV Files (*.csv)", "*.csv"), body::data);
+    }
+
+    private static void export(ExtensionFilter filter, Supplier<String> content) {
+    	Stage stage = new Stage();
+        FileChooser chooser = new FileChooser();
+        chooser.getExtensionFilters().add(filter);
+        chooser.setSelectedExtensionFilter(filter);
+
+        File targetFile = chooser.showSaveDialog(stage);
 
         if (targetFile != null) {
             try {
-                Files.writeString(targetFile.toPath(), data);
-                System.out.println("File saved to: " + targetFile.getAbsolutePath());
+                Files.writeString(targetFile.toPath(), content.get());
             } catch (IOException e) {
                 stage.setScene(new Scene(new Group(new Text(10, 40, e.getMessage()))));
                 stage.show();
             }
-            
-        Platform.exit();
-        } else Platform.exit();
+        }
     }
 }

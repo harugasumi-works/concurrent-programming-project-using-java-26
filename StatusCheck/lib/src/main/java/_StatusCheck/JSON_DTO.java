@@ -5,8 +5,8 @@ public class JSON_DTO{
 	
 	private static final ObjectMapper mapper = new ObjectMapper();
 	
-	public static String convert(Object object) {
-		return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
+	public static JSON convert(Object object) {
+		return new JSON(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(object));
 	}
 	
 
