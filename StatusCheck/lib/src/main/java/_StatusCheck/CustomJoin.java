@@ -14,7 +14,8 @@ public class CustomJoin implements StructuredTaskScope.Joiner<ScanResult, Execut
 	@Override 
     public boolean onComplete(Subtask<ScanResult> subtask) { //
     	ScanResult result = subtask.get();
-        if (result instanceof ScanResult(_, Success(_, _, _))) {
+    	UILogic.onScanCompleted(result);
+        if (result instanceof ScanResult(_, _, Success(_, _, _))) {
             successes.add(subtask.get());
         } else failures.add(subtask.get());
         return false;

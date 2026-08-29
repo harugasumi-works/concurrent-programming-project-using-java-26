@@ -17,8 +17,12 @@ public class Operator {
 	
 	private static final CustomJoin joiner = new CustomJoin();
 	private static List<Callable<ScanResult>> tasks = new ArrayList<>();
+	public static List<ScanRequest> requestList = new ArrayList<>();
 	public static LazyConstant<JSON> json = null;
 	public static LazyConstant<CSV> csv = null;
+	
+
+
 	
 	private static final HttpClient client = HttpClient.newBuilder()
 			.version(Version.HTTP_3)
@@ -52,7 +56,8 @@ public class Operator {
 	}
 	
 	@SuppressWarnings("preview")
-	public static void executeScan() {	
+	public static boolean executeScan() {
+		if (tasks.isEmpty()) return false;
 		try (var scope = StructuredTaskScope.open(joiner)) {		
 			tasks.stream().forEach(scope::fork) ;
 			try {
@@ -60,24 +65,21 @@ public class Operator {
 				Report stat = Report.summarize(results);
 				json = LazyConstant.of(() -> {return JSON_DTO.convert(stat); });
 				csv = LazyConstant.of(() -> {return CSV_DTO.convert(results); });
-				
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 
 
 		}
+		
+		return true;
+		
 	}
 	
 	public static void setUp() {
-		List<ScanRequest> request = List.of(
-				new ScanRequest("www.facebook.com"),
-				new ScanRequest("www.google.com"),
-				new ScanRequest("www.youtube.com"));
-		
-		
-		tasks = request.stream()
-				.<Callable<ScanResult>>map(req -> () -> new ScanResult(req, scanOperator(req)))
+		if (!requestList.isEmpty())
+		tasks = requestList.stream()
+				.<Callable<ScanResult>>map(req -> () -> new ScanResult(req.id() ,req, scanOperator(req)))
 				.toList();	
 	
 	}

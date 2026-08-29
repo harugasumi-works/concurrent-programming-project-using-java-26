@@ -1,5 +1,5 @@
 package _StatusCheck;
 
-public record ScanRequest(String requestedURL) {
+public record ScanRequest(String id, String requestedURL) {
 
 }

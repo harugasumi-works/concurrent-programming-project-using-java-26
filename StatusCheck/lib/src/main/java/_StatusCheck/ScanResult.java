@@ -1,5 +1,5 @@
 package _StatusCheck;
 
-public record ScanResult(ScanRequest context, Outcome outcome) {
+public record ScanResult(String id, ScanRequest context, Outcome outcome) {
 
 }
