@@ -15,8 +15,7 @@ import java.util.concurrent.StructuredTaskScope;
 
 public class Operator {
 	
-	private static final CustomJoin joiner = new CustomJoin();
-	private static List<Callable<ScanResult>> tasks = new ArrayList<>();
+	private static List<Callable<ScanResult>> tasks = new ArrayList<>(); 
 	public static List<ScanRequest> requestList = new ArrayList<>();
 	public static LazyConstant<JSON> json = null;
 	public static LazyConstant<CSV> csv = null;
@@ -58,6 +57,7 @@ public class Operator {
 	@SuppressWarnings("preview")
 	public static boolean executeScan() {
 		if (tasks.isEmpty()) return false;
+		var joiner = new CustomJoin(UILogic::onScanCompleted);
 		try (var scope = StructuredTaskScope.open(joiner)) {		
 			tasks.stream().forEach(scope::fork) ;
 			try {
@@ -77,7 +77,6 @@ public class Operator {
 	}
 	
 	public static void setUp() {
-		if (!requestList.isEmpty())
 		tasks = requestList.stream()
 				.<Callable<ScanResult>>map(req -> () -> new ScanResult(req.id() ,req, scanOperator(req)))
 				.toList();	

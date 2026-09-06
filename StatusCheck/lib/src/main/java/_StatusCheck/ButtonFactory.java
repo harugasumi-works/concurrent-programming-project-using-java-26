@@ -13,15 +13,16 @@ public class ButtonFactory {
 		button.setOnAction(_ -> {
 				Operator.requestList = UILogic.items.stream()
 													.<ScanRequest>mapMulti((item, consumer) -> {
-														if (item instanceof RowItem.Pending(ScanRequest request)) {
-															consumer.accept(request);
-														}
+														switch (item) {
+										                	case RowItem.Pending(ScanRequest request) -> consumer.accept(request);
+										                	case RowItem.Scanned(ScanResult result) -> consumer.accept(result.context());
+										            }
 													})
 													.toList();
         		Operator.setUp();      		
         		if (Operator.executeScan() == false) {
         			PopUp.message("Failed to scan. Check if the list is empty");
-        		} else	PopUp.message("Successfully scanned");
+        		} else PopUp.message("Successfully scanned");
         		 		   	
         });
 		return button;
