@@ -1,6 +1,7 @@
 package _StatusCheck;
 
 import javafx.beans.binding.Bindings;
+import javafx.concurrent.Task;
 import javafx.geometry.Side;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
@@ -9,23 +10,36 @@ import javafx.scene.control.SplitMenuButton;
 public class ButtonFactory {
 	
 	public static Button scanButton() {
-		Button button = new Button("Scan");
-		button.setOnAction(_ -> {
-				Operator.requestList = UILogic.items.stream()
-													.<ScanRequest>mapMulti((item, consumer) -> {
-														switch (item) {
-										                	case RowItem.Pending(ScanRequest request) -> consumer.accept(request);
-										                	case RowItem.Scanned(ScanResult result) -> consumer.accept(result.context());
-										            }
-													})
-													.toList();
-        		Operator.setUp();      		
-        		if (Operator.executeScan() == false) {
-        			PopUp.message("Failed to scan. Check if the list is empty");
-        		} else PopUp.message("Successfully scanned");
-        		 		   	
-        });
-		return button;
+	    Button button = new Button("Scan");
+	    button.setOnAction(_ -> {
+	        Operator.requestList = UILogic.items.stream()
+	            .<ScanRequest>mapMulti((item, consumer) -> {
+	                switch (item) {
+	                    case RowItem.Pending(ScanRequest request) -> consumer.accept(request);
+	                    case RowItem.Scanned(ScanResult result) -> consumer.accept(result.context());
+	                }
+	            })
+	            .toList();
+	        Operator.setUp();
+
+	        Task<Boolean> task = new Task<Boolean>() {
+	            @Override protected Boolean call() {
+	                return Operator.executeScan();  
+	            }
+	        };
+
+	        task.setOnSucceeded(_ -> {
+	            if (task.getValue() == false) {
+	                PopUp.message("Failed to scan. Check if the list is empty");
+	            } else {
+	                PopUp.message("Successfully scanned");
+	            }
+	        });
+	        task.setOnFailed(_ -> PopUp.message("Scan failed unexpectedly"));
+
+	        new Thread(task).start();
+	    });
+	    return button;
 	}
 	
 	public static MenuItem json() {
