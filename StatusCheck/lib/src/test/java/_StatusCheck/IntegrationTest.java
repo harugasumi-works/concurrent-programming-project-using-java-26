@@ -14,12 +14,13 @@ import org.junit.jupiter.api.Test;
 
 @Tag("integration")
 public class IntegrationTest {
-	protected List<String> urls = List.of("www.google.com", "www.wyz.wyz");
+	protected List<String> correctUrls = List.of("www.google.com", "www.wyz.wyz");
+	protected List<String> illegalUrls = List.of("asd asd asd", "ありがとうございます。");
 	protected String testJSON, testCSV;
 	
 	@Test
-	public void testOperation() {
-		Operator.requestList = urls.stream()
+	public void testOperationCorrect() {
+		Operator.requestList = correctUrls.stream()
 									.map(content -> new ScanRequest(UUID.randomUUID().toString(), content))
 									.toList();
 		
@@ -29,7 +30,7 @@ public class IntegrationTest {
 		
 		assertEquals(null, Operator.csv);
 		assertEquals(null, Operator.json);
-		assertEquals(ok, Operator.executeScan(_ -> {}));
+		assertEquals(ok, Operator.executeScan(_ -> {}, () -> {}));
 		
 		
 		testJSON = Operator.json.get().data();
@@ -37,6 +38,29 @@ public class IntegrationTest {
 		
 		assertTrue(testJSON.contains("www.google.com"));
 		assertTrue(testCSV.contains("www.google.com"));
+		
+	}
+	
+	@Test
+	public void testOperationIllegal() {
+		Operator.requestList = illegalUrls.stream()
+				.map(content -> new ScanRequest(UUID.randomUUID().toString(), content))
+				.toList();
+		
+		Operator.setUp();
+		
+		var ok = true;
+		
+		assertEquals(null, Operator.csv);
+		assertEquals(null, Operator.json);
+		assertEquals(ok, Operator.executeScan(_ -> {}, () -> {}));
+		
+		
+		testJSON = Operator.json.get().data();
+		testCSV = Operator.csv.get().data();
+		
+		assertTrue(testJSON.contains("malformed"));
+		assertTrue(testCSV.contains("malformed"));
 		
 	}
 	

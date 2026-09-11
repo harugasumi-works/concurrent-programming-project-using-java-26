@@ -30,7 +30,9 @@ public class Operator {
             .build(); 
 
 	private static Outcome scanOperator(ScanRequest req) {
-        HttpRequest request = HttpRequest.newBuilder()
+		HttpRequest request;
+		try {
+        request = HttpRequest.newBuilder()
         		 .uri(URI.create("https://" + req.requestedURL()))
         	        .timeout(Duration.ofSeconds(5))
         	        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36")
@@ -38,6 +40,9 @@ public class Operator {
         	        .header("Accept-Language", "en-US,en;q=0.9")
         	        .GET()
         	        .build();
+		} catch (Exception e) {
+			return new Fail(Instant.now(), 0, e.getMessage());
+		}
 
 		try {
 			Instant start = Instant.now();
@@ -56,9 +61,9 @@ public class Operator {
 	}
 	
 	@SuppressWarnings("preview")
-	public static boolean executeScan(Consumer<ScanResult> consumer) {
+	public static boolean executeScan(Consumer<ScanResult> consumer, Runnable failSafe) {
 		if (tasks.isEmpty()) return false;
-		var joiner = new CustomJoin(consumer);
+		var joiner = new CustomJoin(consumer, failSafe);
 		try (var scope = StructuredTaskScope.open(joiner)) {		
 			tasks.stream().forEach(scope::fork) ;
 			try {

@@ -12,15 +12,21 @@ public class CustomJoin implements StructuredTaskScope.Joiner<ScanResult, Execut
     private final ConcurrentLinkedQueue<ScanResult> failures = new ConcurrentLinkedQueue<>();
     
     private final Consumer<ScanResult> onResult;
+    private final Runnable onTaskFailure;
 
-    public CustomJoin(Consumer<ScanResult> onResult) {
+    public CustomJoin(Consumer<ScanResult> onResult, Runnable onTaskFailure) {
         this.onResult = onResult;
+        this.onTaskFailure = onTaskFailure;
     }
 
 	
     @SuppressWarnings("preview")
 	@Override 
-    public boolean onComplete(Subtask<ScanResult> subtask) { //
+    public boolean onComplete(Subtask<ScanResult> subtask) { 
+    	if (subtask.state() != Subtask.State.SUCCESS) {
+    		onTaskFailure.run();
+    		return false;
+    	}
     	ScanResult result = subtask.get();
     	onResult.accept(result);
     	if (result instanceof ScanResult(_, _, Success(_, _, _))) {

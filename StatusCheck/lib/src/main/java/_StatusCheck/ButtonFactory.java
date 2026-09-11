@@ -24,7 +24,7 @@ public class ButtonFactory {
 
 	        Task<Boolean> task = new Task<Boolean>() {
 	            @Override protected Boolean call() {
-	                return Operator.executeScan(UILogic::onScanCompleted);  
+	                return Operator.executeScan(UILogic::onScanCompleted, () -> PopUp.message("Thread failed"));  
 	            }
 	        };
 
@@ -38,7 +38,10 @@ public class ButtonFactory {
 	        task.setOnFailed(_ -> PopUp.message("Scan failed unexpectedly"));
 
 	        new Thread(task).start();
+	        button.disableProperty().bind(task.runningProperty());
 	    });
+	    
+	    
 	    return button;
 	}
 	

@@ -6,6 +6,7 @@ import java.time.Instant;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.StructuredTaskScope;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,7 @@ public class CustomJoinTest {
 	@SuppressWarnings("preview")
 	@Test
 	public void singleSuccessfulTask_addedToSuccessesQueue() {
-		var joiner = new CustomJoin(_ -> {});
+		var joiner = new CustomJoin(_ -> {}, () -> {});
 		try (var scope = StructuredTaskScope.open(joiner)) {		
 			scope.fork(successThread);		
 			try {
@@ -50,7 +51,7 @@ public class CustomJoinTest {
 	@SuppressWarnings("preview")
 	@Test
 	public void singleFailTask_addedToFailQueue() {
-		var joiner = new CustomJoin(_ -> {});
+		var joiner = new CustomJoin(_ -> {}, () -> {});
 		try (var scope = StructuredTaskScope.open(joiner)) {		
 			scope.fork(failThread);		
 			try {
@@ -68,8 +69,8 @@ public class CustomJoinTest {
 	@SuppressWarnings("preview")
 	@Test
 	public void dataIsolationTest () {
-		var joiner1 = new CustomJoin(_ -> {});
-		var joiner2 = new CustomJoin(_ -> {});
+		var joiner1 = new CustomJoin(_ -> {}, () -> {});
+		var joiner2 = new CustomJoin(_ -> {}, () -> {});
 		try (var scope = StructuredTaskScope.open(joiner1)) {		
 			scope.fork(successThread);		
 			try {
@@ -90,6 +91,27 @@ public class CustomJoinTest {
 				fail("Test was interrupted: " + e.getMessage());
 			}
 		}
+	}
+	
+	@SuppressWarnings("preview")
+	@Test
+	public void taskLevelFailure_doesNotCrashAndTriggersFailSafe() {
+		AtomicBoolean failSafeTriggered = new AtomicBoolean(false);
+	    var joiner = new CustomJoin(_ -> {}, () -> failSafeTriggered.set(true));
+	    
+	    try (var scope = StructuredTaskScope.open(joiner)) {
+	        scope.fork(() -> { throw new RuntimeException("simulated task failure"); });
+
+	        try {
+	            ExecutionResult result = scope.join();
+
+	            assertTrue(failSafeTriggered.get());
+	            assertEquals(0, result.successes().size());
+	            assertEquals(0, result.failures().size());
+	        } catch (InterruptedException e) {
+	            fail(e.getMessage());
+	        }
+	    }
 	}
 
 }
