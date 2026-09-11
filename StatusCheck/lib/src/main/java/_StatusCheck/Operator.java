@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.StructuredTaskScope;
+import java.util.function.Consumer;
 
 public class Operator {
 	
@@ -55,9 +56,9 @@ public class Operator {
 	}
 	
 	@SuppressWarnings("preview")
-	public static boolean executeScan() {
+	public static boolean executeScan(Consumer<ScanResult> consumer) {
 		if (tasks.isEmpty()) return false;
-		var joiner = new CustomJoin(UILogic::onScanCompleted);
+		var joiner = new CustomJoin(consumer);
 		try (var scope = StructuredTaskScope.open(joiner)) {		
 			tasks.stream().forEach(scope::fork) ;
 			try {

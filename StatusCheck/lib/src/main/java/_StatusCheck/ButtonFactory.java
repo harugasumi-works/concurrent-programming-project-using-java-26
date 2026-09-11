@@ -24,7 +24,7 @@ public class ButtonFactory {
 
 	        Task<Boolean> task = new Task<Boolean>() {
 	            @Override protected Boolean call() {
-	                return Operator.executeScan();  
+	                return Operator.executeScan(UILogic::onScanCompleted);  
 	            }
 	        };
 
