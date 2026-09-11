@@ -1,4 +1,4 @@
-package _StatusCheck;
+package _StatusCheck.domain;
 
 public record ScanResult(String id, ScanRequest context, Outcome outcome) {
 

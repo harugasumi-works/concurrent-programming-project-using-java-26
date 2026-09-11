@@ -1,4 +1,4 @@
-package _StatusCheck;
+package _StatusCheck.concurrency;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,6 +13,18 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.StructuredTaskScope;
 import java.util.function.Consumer;
+
+import _StatusCheck.domain.CSV;
+import _StatusCheck.domain.ExecutionResult;
+import _StatusCheck.domain.Fail;
+import _StatusCheck.domain.JSON;
+import _StatusCheck.domain.Outcome;
+import _StatusCheck.domain.Report;
+import _StatusCheck.domain.ScanRequest;
+import _StatusCheck.domain.ScanResult;
+import _StatusCheck.domain.Success;
+import _StatusCheck.io.CSV_DTO;
+import _StatusCheck.io.JSON_DTO;
 
 public class Operator {
 	

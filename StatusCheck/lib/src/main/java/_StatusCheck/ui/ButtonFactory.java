@@ -1,5 +1,12 @@
-package _StatusCheck;
+package _StatusCheck.ui;
 
+import _StatusCheck.concurrency.Operator;
+import _StatusCheck.domain.CSV;
+import _StatusCheck.domain.JSON;
+import _StatusCheck.domain.RowItem;
+import _StatusCheck.domain.ScanRequest;
+import _StatusCheck.domain.ScanResult;
+import _StatusCheck.io.ExportFile;
 import javafx.beans.binding.Bindings;
 import javafx.concurrent.Task;
 import javafx.geometry.Side;

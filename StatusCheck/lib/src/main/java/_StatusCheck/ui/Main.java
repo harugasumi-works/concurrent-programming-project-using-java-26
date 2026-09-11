@@ -1,4 +1,4 @@
-package _StatusCheck;
+package _StatusCheck.ui;
 
 import javafx.application.Application;
 

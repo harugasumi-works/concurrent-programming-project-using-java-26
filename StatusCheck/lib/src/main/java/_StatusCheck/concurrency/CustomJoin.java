@@ -1,10 +1,14 @@
-package _StatusCheck;
+package _StatusCheck.concurrency;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.StructuredTaskScope;
 import java.util.concurrent.StructuredTaskScope.Subtask;
 import java.util.function.Consumer;
+
+import _StatusCheck.domain.ExecutionResult;
+import _StatusCheck.domain.ScanResult;
+import _StatusCheck.domain.Success;
 
 public class CustomJoin implements StructuredTaskScope.Joiner<ScanResult, ExecutionResult> {
 	

@@ -11,6 +11,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import _StatusCheck.concurrency.Operator;
+import _StatusCheck.domain.ScanRequest;
+
 
 @Tag("integration")
 public class IntegrationTest {
@@ -59,8 +62,8 @@ public class IntegrationTest {
 		testJSON = Operator.json.get().data();
 		testCSV = Operator.csv.get().data();
 		
-		assertTrue(testJSON.contains("malformed"));
-		assertTrue(testCSV.contains("malformed"));
+		assertTrue(testJSON.contains("Illegal"));
+		assertTrue(testCSV.contains("Illegal"));
 		
 	}
 	

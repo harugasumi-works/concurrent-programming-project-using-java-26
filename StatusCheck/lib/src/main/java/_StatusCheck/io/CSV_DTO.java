@@ -1,9 +1,14 @@
-package _StatusCheck;
+package _StatusCheck.io;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Stream;
 
+import _StatusCheck.domain.CSV;
+import _StatusCheck.domain.ExecutionResult;
+import _StatusCheck.domain.Fail;
+import _StatusCheck.domain.ScanResult;
+import _StatusCheck.domain.Success;
 import tools.jackson.dataformat.csv.CsvMapper;
 import tools.jackson.dataformat.csv.CsvSchema;
 
@@ -12,7 +17,7 @@ public class CSV_DTO {
 	public static record CsvRow(Instant timeStamp, String url, String outcome, int statusCode, long latencyMs, String reason) {
 		
 		@SuppressWarnings("preview")
-		static CsvRow row(ScanResult result) {
+		public static CsvRow row(ScanResult result) {
 			String url = result.context().requestedURL();
 			return switch (result.outcome()) {
 				case Success(var ts, var code, var latency) -> new CsvRow(ts, url, "Success", code, latency, "");

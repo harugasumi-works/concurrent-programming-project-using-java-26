@@ -11,6 +11,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import _StatusCheck.concurrency.CustomJoin;
+import _StatusCheck.domain.ExecutionResult;
+import _StatusCheck.domain.Fail;
+import _StatusCheck.domain.ScanRequest;
+import _StatusCheck.domain.ScanResult;
+import _StatusCheck.domain.Success;
+
 
 public class CustomJoinTest {
 	protected ScanRequest successReq, failReq;

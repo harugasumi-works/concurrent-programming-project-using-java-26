@@ -1,10 +1,10 @@
-package _StatusCheck;
+package _StatusCheck.domain;
 
 import java.util.List;
 
 public record Report(CountStat stats, List<ScanResult> successes, List<ScanResult> failures) {
 
-static Report summarize(ExecutionResult result) {
+public static Report summarize(ExecutionResult result) {
     int success = result.successes().size();
     int failure = result.failures().size();
     CountStat stats = new CountStat(success + failure, success, failure);

@@ -10,7 +10,14 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import _StatusCheck.CSV_DTO.CsvRow;
+import _StatusCheck.domain.CSV;
+import _StatusCheck.domain.ExecutionResult;
+import _StatusCheck.domain.Fail;
+import _StatusCheck.domain.ScanRequest;
+import _StatusCheck.domain.ScanResult;
+import _StatusCheck.domain.Success;
+import _StatusCheck.io.CSV_DTO;
+import _StatusCheck.io.CSV_DTO.CsvRow;
 import tools.jackson.databind.MappingIterator;
 import tools.jackson.dataformat.csv.CsvMapper;
 import tools.jackson.dataformat.csv.CsvSchema;

@@ -9,6 +9,14 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import _StatusCheck.domain.CountStat;
+import _StatusCheck.domain.Fail;
+import _StatusCheck.domain.JSON;
+import _StatusCheck.domain.Report;
+import _StatusCheck.domain.ScanRequest;
+import _StatusCheck.domain.ScanResult;
+import _StatusCheck.domain.Success;
+import _StatusCheck.io.JSON_DTO;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 

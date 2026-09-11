@@ -9,6 +9,15 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import _StatusCheck.domain.CountStat;
+import _StatusCheck.domain.ExecutionResult;
+import _StatusCheck.domain.Fail;
+import _StatusCheck.domain.Outcome;
+import _StatusCheck.domain.Report;
+import _StatusCheck.domain.ScanRequest;
+import _StatusCheck.domain.ScanResult;
+import _StatusCheck.domain.Success;
+
 public class ReportTest {
 
 	protected ScanRequest req1, req2, req3, req4;

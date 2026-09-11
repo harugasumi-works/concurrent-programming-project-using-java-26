@@ -1,8 +1,11 @@
-package _StatusCheck;
+package _StatusCheck.ui;
 
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import _StatusCheck.domain.RowItem;
+import _StatusCheck.domain.ScanRequest;
+import _StatusCheck.domain.ScanResult;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

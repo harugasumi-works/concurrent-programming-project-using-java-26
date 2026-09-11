@@ -1,10 +1,12 @@
-package _StatusCheck;
+package _StatusCheck.io;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.function.Supplier;
 
+import _StatusCheck.domain.CSV;
+import _StatusCheck.domain.JSON;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.text.Text;

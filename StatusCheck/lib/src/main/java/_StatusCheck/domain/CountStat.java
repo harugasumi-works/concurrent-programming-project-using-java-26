@@ -1,4 +1,4 @@
-package _StatusCheck;
+package _StatusCheck.domain;
 
 public record CountStat(int total, int successCount, int failureCount) {
 

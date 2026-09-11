@@ -1,7 +1,11 @@
-package _StatusCheck;
+package _StatusCheck.ui;
 
 import java.util.UUID;
 
+import _StatusCheck.domain.Fail;
+import _StatusCheck.domain.RowItem;
+import _StatusCheck.domain.ScanRequest;
+import _StatusCheck.domain.Success;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;

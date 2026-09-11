@@ -1,5 +1,6 @@
-package _StatusCheck;
+package _StatusCheck.io;
 
+import _StatusCheck.domain.JSON;
 import tools.jackson.databind.*;
 public class JSON_DTO{
 	
